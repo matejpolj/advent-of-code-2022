@@ -12,17 +12,35 @@ def findDash(A):
 
 
 def getRange(A):
-    range = findSet(A)
-    dif1 = findDash(A[0:range-1])
-    dif2 = findDash(A[range-1, len(A)])
-    num1 = int(A[0: dif1-1])
-    num2 = int(A[dif1: range-1])
-    num3 = int(A[range: dif2-1])
-    num4 = int(A[dif2: len(A)])
-    print(num1, num2, num3, num4)
+    rang = findSet(A)
+    dif1 = findDash(A[0:(rang-1)])
+    dif2 = findDash(A[(rang): len(A)])
+    num1 = int(A[0: (dif1)])
+    num2 = int(A[dif1+1: (rang)])
+    num3 = int(A[rang+1: (dif2+rang)])
+    num4 = int(A[dif2+rang+1: len(A)])
     return num1, num2, num3, num4
 
 
-with open('input03.txt') as f:
+def compareEnclosement(num1, num2, num3, num4):
+    if (((num1 <= num3) and (num2 >= num4)) or ((num1 >= num3) and (num2 <= num4))):
+        return 1
+    else:
+        return 0
+
+
+def compareOverlapp(num1, num2, num3, num4):
+    if (((num1 <= num3) and (num2 >= num4)) or ((num1 >= num3) and (num2 <= num4)) or ((num1 <= num3) and (num2 >= num3)) or ((num1 >= num3) and (num1 <= num4))):
+        return 1
+    else:
+        return 0
+        
+
+with open('input04.txt') as f:
     lines = f.readlines()
-    
+    sum = 0
+    for i in range(0, len(lines)):
+        num1, num2, num3, num4 = getRange(lines[i])
+#        sum += compareEnclosement(num1, num2, num3, num4)
+        sum += compareOverlapp(num1, num2, num3, num4)
+    print(sum)

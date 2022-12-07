@@ -20,19 +20,10 @@ def getSplits(L):
     
 
 def createDirectory(L):
-    I = []
+    I = [[]]
     level = 0
     dire = 0
-    for i in range(0, len(L)):
-        ind = getSplits(L[i])
-        if (ind == 1):
-            level = 0
-        elif (ind == 0):
-            level -= 0
-        elif (ind == 2):
-            level += 1
-        elif (ind == 3):
-
+    
 
 
 with open('input07.txt') as f:

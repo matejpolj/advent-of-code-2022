@@ -42,27 +42,52 @@ def createStructure(L):
     return V
 
 
+def getSum(L):
+    start_ind = L[0][0]
+    sum = L[0][1]
+    for i in range(1, len(L)):
+        if (L[i][0]<= start_ind):
+            return sum
+        else:
+            sum += L[i][1]
+    return sum
+
+
 def getBiggerThan(L, value):
     tmp = 0
     index = 0
     for i in range(0, len(L)):
-        tmp = 0
-        for j in range(i, len(L)):
-            if (L[j][0] > L[i][0]):
-                tmp += L[j][1]
-            if ((tmp + L[j][1]) > value):
-                print(tmp, 'o')
-                index += 
-                tmp = 0
-                break
-            print(tmp)
-        print(index, i)
+        tmp = getSum(L[i:len(L)])
+        if (tmp > value):
+            continue
+        else:
+            index += tmp
     return index
+
+
+def deleteBiggest(L, full, requ):
+    total = full - getSum(L)
+    cur_max = getSum(L)
+    need = requ - total
+    print(total, need, getSum(L))
+    for i in range(1, len(L)):
+        tmp = getSum(L[i:len(L)])
+        print(tmp)
+        if (tmp < need):
+            continue
+        else:
+            if ((need - tmp) > (need - cur_max)):
+                cur_max = tmp
+            else:
+                continue
+    return cur_max
 
 
 with open('input07.txt') as f:
     lines = f.readlines()
     t = createStructure(lines)
-    i = getBiggerThan(t, 100000)
-    print(t, i)
+    #i = getBiggerThan(t, 100000)
+    i = deleteBiggest(t, 70000000, 30000000)
+    #print(t, i)
+    print(i)
     

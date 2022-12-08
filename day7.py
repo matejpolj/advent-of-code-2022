@@ -23,34 +23,46 @@ def getSplits(L):
 def createStructure(L):
     level = 0
     data = 0
-    tmp_data = []
-    V = []
+    V = [[level, data]]
     for i in range(0, len(L)):
         value = getSplits(L[i])
         if ((value == 1) or (value == 3) or (value == 4)):
             continue
         elif (value == 0):
+            V[-1][1] += data
+            data = 0
             level -= 1
         elif (value == 2):
             level += 1
-        else:
-            tmp = [level, value]
+            tmp = [level, data]
             V.append(tmp)
+            data = 0
+        else:
+            V[-1][1] += value
     return V
 
 
-def reduceStructure(L):
-    for i in range(1, len(L)):
-        if (L[i-1][0] == L[i][0]):
-            tmp = L[i].pop()
-            print(tmp, L[i-1], i)
-            L[i-1][1] += tmp
+def getBiggerThan(L, value):
+    tmp = 0
+    index = 0
+    for i in range(0, len(L)):
+        tmp = 0
+        for j in range(i, len(L)):
+            if (L[j][0] > L[i][0]):
+                tmp += L[j][1]
+            if ((tmp + L[j][1]) > value):
+                print(tmp, 'o')
+                index += 
+                tmp = 0
+                break
+            print(tmp)
+        print(index, i)
+    return index
 
 
 with open('input07.txt') as f:
     lines = f.readlines()
     t = createStructure(lines)
-    print(t, t[4])
-    reduceStructure(t)
-    print(t)
+    i = getBiggerThan(t, 100000)
+    print(t, i)
     

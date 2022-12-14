@@ -13,7 +13,7 @@ def decodeInp(L):
     else:
         x = 0
         y = 0
-    print(L, x, y)
+    #print(L, x, y)
     return x, y
 
 
@@ -64,9 +64,25 @@ class Tail:
 with open('input09.txt') as f:
     lines = f.readlines()
     head = Head()
-    tail = Tail()
+    tail1 = Tail()
+    tail2 = Tail()
+    tail3 = Tail()
+    tail4 = Tail()
+    tail5 = Tail()
+    tail6 = Tail()
+    tail7 = Tail()
+    tail8 = Tail()
+    tail9 = Tail()
     for i in range(0, len(lines)):
         x, y = head.move(lines[i])
         for i in range(0, abs(x + y)):
-            tail.followHead(head)
-    print(len(tail.pos))
+            tail1.followHead(head)
+            tail2.followHead(tail1)
+            tail3.followHead(tail2)
+            tail4.followHead(tail3)
+            tail5.followHead(tail4)
+            tail6.followHead(tail5)
+            tail7.followHead(tail6)
+            tail8.followHead(tail7)
+            tail9.followHead(tail8)
+    print(len(tail9.pos))

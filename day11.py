@@ -7,10 +7,10 @@ class Monkey:
         self.divisor = div
         self.operation = operation
         self.operand = operand
-        self.round
+        self.round = 0
 
     def __str__(self):
-        return f"Monkey {self.i}: self.count"
+        return f"Monkey {self.i}: {self.count}, {self.items, self.divisor, self.operation, self.operand. self.t.ind, self.f.ind}"
 
     def setOthers(self, T, F):
         self.t = T
@@ -43,17 +43,18 @@ def decodeOne(l):
     if (l[2][23] == '+'):
         operation = 1
     elif (l[2][23] == '*'):
-        if (l[2][25:len(l[2])] == 'old'):
+        if (l[2][25:len(l[2])] == 'old\n'):
             operation = 0
         else:
             operation = 2
     if (operation > 0):
+        print(l[2][25:len(l[2])], operation)
         operand = int(l[2][25:len(l[2])])
     divisor = int(l[3][21:len(l[3])])
     itm = l[1].split()
     items = [int(x[0:2]) for x in itm[2:len(itm)]]
-    print(items, operation, operand, divisor)
-    return items, operation, operand, divisor
+    #print(items, operation, operand, divisor)
+    return items, divisor, operation, operand
     
 
 def decodeTwo(l):
@@ -64,6 +65,12 @@ def decodeTwo(l):
 
 with open('input11.txt') as f:
     lines = f.readlines()
+    monkeys = []
     #print(lines, decodeOne(lines[7:13]), decodeTwo(lines[7:13]))
-    for i in range(0, (len(lines)//7)):
-        
+    for i in range(0, (len(lines)), 7):
+        print(lines[(i):(i + 6)])
+        itm, di, op, opr = decodeOne(lines[(i):(i + 6)])
+        monkeys.append(Monkey(i, itm, di, op, opr))
+    for i in range(0, len(lines), 7):
+        t, f = decodeTwo(lines[i:(i+6)])
+        monkeys[i].setOthers(monkeys)

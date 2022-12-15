@@ -10,7 +10,7 @@ class Monkey:
         self.round = 0
 
     def __str__(self):
-        return f"Monkey {self.i}: {self.count}, {self.items, self.divisor, self.operation, self.operand. self.t.ind, self.f.ind}"
+        return f"Monkey {self.i}: {self.count}, {self.items, self.divisor, self.operation, self.operand, self.t.i, self.f.i}"
 
     def setOthers(self, T, F):
         self.t = T
@@ -20,18 +20,18 @@ class Monkey:
         self.items.append(item)
 
     def inspectItems(self):
-        for i in range(0, len(self.items)):
+        for j in range(0, len(self.items)):
             if (self.operation == 0):
-                self.items[i] = self.items[i] * self.items[i]
+                self.items[0] = self.items[0] * self.items[0]
             elif (self.operation == 1):
-                self.items[i] = self.items[i] + self.operand
+                self.items[0] = self.items[0] + self.operand
             elif (self.operation == 2):
-                self.items[i] = self.items[i] * self.operand
-            self.items[i] //= 3
-            if ((self.items[i]%self.divisor) == 0):
-                self.t.addItem(self.items.pop())
+                self.items[0] = self.items[0] * self.operand
+            self.items[0] //= 3
+            if ((self.items[0]%self.divisor) == 0):
+                self.t.addItem(self.items.pop(0))
             else:
-                self.f.addItem(self.items.pop())
+                self.f.addItem(self.items.pop(0))
             self.count += 1
 
 
@@ -48,7 +48,7 @@ def decodeOne(l):
         else:
             operation = 2
     if (operation > 0):
-        print(l[2][25:len(l[2])], operation)
+        #print(l[2][25:len(l[2])], operation)
         operand = int(l[2][25:len(l[2])])
     divisor = int(l[3][21:len(l[3])])
     itm = l[1].split()
@@ -63,14 +63,30 @@ def decodeTwo(l):
     return t, f
 
 
+def findBiggestMult(m):
+    max = [0, 0]
+    for i in range(0, len(m)):
+        if (m[i].count > max[0]):
+            if (m[i].count > max[1]):
+                max[0] = max[1]
+                max[1] = m[i].count
+            else:
+                max[0] = m[i].count
+    return max[0] * max[1]
+
+
 with open('input11.txt') as f:
     lines = f.readlines()
     monkeys = []
-    #print(lines, decodeOne(lines[7:13]), decodeTwo(lines[7:13]))
     for i in range(0, (len(lines)), 7):
-        print(lines[(i):(i + 6)])
         itm, di, op, opr = decodeOne(lines[(i):(i + 6)])
-        monkeys.append(Monkey(i, itm, di, op, opr))
+        monkeys.append(Monkey(i//7, itm, di, op, opr))
     for i in range(0, len(lines), 7):
         t, f = decodeTwo(lines[i:(i+6)])
-        monkeys[i].setOthers(monkeys)
+        monkeys[i//7].setOthers(monkeys[t], monkeys[f])
+    for i in range(0, 20):
+        for j in range(0, len(monkeys)):
+            monkeys[j].inspectItems()
+    for i in range(0, len(monkeys)):
+        print(monkeys[i])
+    print(findBiggestMult(monkeys))

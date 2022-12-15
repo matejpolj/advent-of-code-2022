@@ -84,7 +84,7 @@ with open('input11.txt') as f:
     for i in range(0, len(lines), 7):
         t, f = decodeTwo(lines[i:(i+6)])
         monkeys[i//7].setOthers(monkeys[t], monkeys[f])
-    for i in range(0, 1000):
+    for i in range(0, 20):
         print(i)
         for j in range(0, len(monkeys)):
             monkeys[j].inspectItems()

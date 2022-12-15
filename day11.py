@@ -20,14 +20,14 @@ class Monkey:
         self.items.append(item)
 
     def inspectItems(self):
-        for j in range(0, len(self.items)):
+        while (len(self.items) > 0):
             if (self.operation == 0):
                 self.items[0] = self.items[0] * self.items[0]
             elif (self.operation == 1):
                 self.items[0] = self.items[0] + self.operand
             elif (self.operation == 2):
                 self.items[0] = self.items[0] * self.operand
-            self.items[0] //= 3
+            #self.items[0] //= 3
             if ((self.items[0]%self.divisor) == 0):
                 self.t.addItem(self.items.pop(0))
             else:
@@ -84,7 +84,8 @@ with open('input11.txt') as f:
     for i in range(0, len(lines), 7):
         t, f = decodeTwo(lines[i:(i+6)])
         monkeys[i//7].setOthers(monkeys[t], monkeys[f])
-    for i in range(0, 20):
+    for i in range(0, 1000):
+        print(i)
         for j in range(0, len(monkeys)):
             monkeys[j].inspectItems()
     for i in range(0, len(monkeys)):

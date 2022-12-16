@@ -28,6 +28,7 @@ class Monkey:
             elif (self.operation == 2):
                 self.items[0] = self.items[0] * self.operand
             #self.items[0] //= 3
+            self.items[0] %= self.com_div
             if ((self.items[0]%self.divisor) == 0):
                 self.t.addItem(self.items.pop(0))
             else:
@@ -78,14 +79,17 @@ def findBiggestMult(m):
 with open('input11.txt') as f:
     lines = f.readlines()
     monkeys = []
+    modd = 1
     for i in range(0, (len(lines)), 7):
         itm, di, op, opr = decodeOne(lines[(i):(i + 6)])
         monkeys.append(Monkey(i//7, itm, di, op, opr))
+        modd *= di
+    print(modd)
     for i in range(0, len(lines), 7):
+        monkeys[i//7].com_div = modd
         t, f = decodeTwo(lines[i:(i+6)])
         monkeys[i//7].setOthers(monkeys[t], monkeys[f])
-    for i in range(0, 20):
-        print(i)
+    for i in range(0, 10000):
         for j in range(0, len(monkeys)):
             monkeys[j].inspectItems()
     for i in range(0, len(monkeys)):

@@ -23,17 +23,13 @@ def main () -> None:
     e = [c for c, v in topo.items() if v == 27][-1]
 
     qp, qv = deque([(0,s[0],s[1])]), deque([(0,s[0],s[1])])
-    
     while qp:
         ns, nx, ny = qp.popleft()
-        
         if (nx, ny) == e: break
         if (nx, ny) in qv: continue
         qv.append((nx, ny))
-        
         for nnx, nny in getnns(nx, ny):
             qp.append((ns+1, nnx, nny))
-
     print(min([ns for ns, nx, ny in qp]))
 
 

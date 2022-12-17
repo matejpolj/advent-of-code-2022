@@ -1,90 +1,27 @@
+import sys
+from string import ascii_lowercase
+from collections import deque
 
-def getElevation(A):
-    if (A == 'S'):
-        return 0
-    elif (A == 'E'):
-        return 27
-    else:
-        return ord(A)%96
-
-
-def createLandscape(I):
-    L = []
-    for i in range(len(I)):
-        L.append([])
-        for j in range(len(I[i])-1):
-            L[i].append(getElevation(I[i][j]))
-    return L
-
-
-def createVisited(L):
-    return [[0 for x in range(len(L[0]))] for y in range(len(L))]
-
-
-def findStartAndEnd(L):
-    sx, sy = 0, 0
-    ex, ey = 0, 0
-    for i in range(len(L)):
-        for j in range(len(L[i])):
-            if (L[i][j] == 0):
-                sx, sy = i, j
-            elif (L[i][j] == 27):
-                ex, ey = i, j
-    return sx, sy, ex, ey
-
-
-def canMove(x, y, a, b):
-    if ((a < 0 or b < 0) or (a >= len(landscape) or b >= len(landscape[0]))):
-        return False
-    if ((visited[a][b] == 1) or abs(landscape[x][y] - landscape[a][b]) > 1):
-        return False
-    return True
-
-
-def travel(xx, xy):
-    global length, shortestLength, visited, foundPath, endx, endy
-    if (xx == endx and xy == endy):
-        foundPath = True
-        shortestLength = min(shortestLength, length)
-        return
-    visited[xy][xx] = 1
-    length += 1
-    if (canMove(xy, xy, xx+1, xy)):
-        travel(xx+1, xy)
-    if (canMove(xy, xy, xx, xy+1)):
-        travel(xx, xy+1)
-    if (canMove(xy, xy, xx-1, xy)):
-        travel(xx-1, xy)
-    if (canMove(xy, xy, xx, xy-1)):
-        travel(xx, xy-1)
-    visited[xx][xy] = 0
-    length -= 1
-
-
-def findPath():
-    travel(startx, starty)
-
-
-lines = []
-landscape = []
-visited = []
-startx, starty, endx, endy = 0, 0, 0, 0
-shortestLength = 2**20
-length = 0
-foundPath = False
 
 def main():
-    global lines, landscape, visited, startx, starty, endx, endy
-    with open('input12.txt') as f:
-        lines = f.readlines()
-        landscape = createLandscape(lines)
-        visited = createVisited(landscape)
-        startx, starty, endx, endy = findStartAndEnd(landscape)
-        findPath()
+    def getNext(x: int, y: int) -> list:
+        return [i for i in [(x-1, y), (x+1,y), (x, y-1), (x, y+1)] if i[0] >= 0 and i[0] <= xmax and i[1] >= 0 and i[1] <= ymax if landscape.get(i) - landscape.get((x, y)) < 2]
+    height = lambda v: list('S'+ascii_lowercase+'E').index(v) if v in 'S'+ascii_lowercase+'E' else None
+    input_text = [list(r) for r in open("input12.txt", 'r').read().splitlines()]
+    landscape = {(x,y):height(v) for y, r in enumerate(input_text) for x, v in enumerate(r)}
+    xmax, ymax = len(input_text[0])-1, len(input_text)-1
+    start = [c for c, v in landscape.items() if v == 0][0]
+    end = [c for c, v in landscape.items() if v == 27][-1]
+    qpoint, qvalue = deque([(0, start[0], start[1])]), deque([(0, start[0], start[1])])
+    while qpoint:
+        number_steps, next_x, next_y = qpoint.popleft()
+        if (next_x, next_y) == end: break
+        if (next_x, next_y) in qvalue: continue
+        qvalue.append((next_x, next_y))
+        for nnx, nny in getNext(next_x, next_y):
+            qpoint.append((number_steps+1, nnx, nny))
+    print(min([nums for nums, numx, numy in qpoint]))
+
 
 if __name__ == '__main__':
-    main()
-    if foundPath:
-        print(f"Shortest Path Length: {shortestLength}")
-    else:
-        print("No Path Possible")
+    sys.exit(main())

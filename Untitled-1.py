@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import sys
 from string import ascii_lowercase
 from collections import deque
@@ -19,18 +17,28 @@ def main () -> None:
 
     xm, ym = len(itxt[0]) -1, len(itxt) -1
     
-    s = [c for c, v in topo.items() if v == 0][0]
+    ss = [c for c, v in topo.items() if v == 1]
     e = [c for c, v in topo.items() if v == 27][-1]
+    aa = list()
+    
+    for s in ss:    
 
-    qp, qv = deque([(0,s[0],s[1])]), deque([(0,s[0],s[1])])
-    while qp:
-        ns, nx, ny = qp.popleft()
-        if (nx, ny) == e: break
-        if (nx, ny) in qv: continue
-        qv.append((nx, ny))
-        for nnx, nny in getnns(nx, ny):
-            qp.append((ns+1, nnx, nny))
-    print(min([ns for ns, nx, ny in qp]))
+        qp, qv = deque([(0,s[0],s[1])]), deque([(0,s[0],s[1])])
+    
+        while qp:
+            ns, nx, ny = qp.popleft()
+            
+            if (nx, ny) == e: break
+            if (nx, ny) in qv: continue
+            qv.append((nx, ny))
+            
+            for nnx, nny in getnns(nx, ny):
+                qp.append((ns+1, nnx, nny))
+
+        if len(qp):
+            aa.append(min([ns for ns, nx, ny in qp]))
+
+    print(min(aa))
 
 
 if __name__ == '__main__':

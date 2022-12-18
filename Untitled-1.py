@@ -1,45 +1,37 @@
-import sys
-from string import ascii_lowercase
-from collections import deque
+def place_rocks(data):
+    rocks = set()
+    for line in data.split("\n"):
+        points = [tuple(map(int, p.split(","))) for p in line.split(" -> ")]
+        for i in range(len(points)-1):
+            p1, p2 = points[i], points[i+1]
+            xr = range(min(p1[0], p2[0]), max(p1[0], p2[0]) + 1)
+            yr = range(min(p1[1], p2[1]), max(p1[1], p2[1]) + 1)
+            rocks.update({(x, y) for x in xr for y in yr})
+    return rocks
 
-def main () -> None:
-
-    def getnns(x: int, y: int) -> list:
-        return [ i for i in [(x-1,y),(x+1,y),(x,y-1),(x,y+1)] \
-            if i[0] >= 0 and i[0] <= xm and i[1] >= 0 and i[1] <= ym \
-                if topo.get(i) - topo.get((x, y)) < 2 ]
-
-    h = lambda v: list('S'+ascii_lowercase+'E').index(v) \
-        if v in 'S'+ascii_lowercase+'E' else None
-
-    itxt = [list(r) for r in open("input12.txt", mode='r').read().splitlines()]
-    topo = {(x,y):h(v) for y, r in enumerate(itxt) for x, v in enumerate(r)}
-
-    xm, ym = len(itxt[0]) -1, len(itxt) -1
-    
-    ss = [c for c, v in topo.items() if v == 1]
-    e = [c for c, v in topo.items() if v == 27][-1]
-    aa = list()
-    
-    for s in ss:    
-
-        qp, qv = deque([(0,s[0],s[1])]), deque([(0,s[0],s[1])])
-    
-        while qp:
-            ns, nx, ny = qp.popleft()
-            
-            if (nx, ny) == e: break
-            if (nx, ny) in qv: continue
-            qv.append((nx, ny))
-            
-            for nnx, nny in getnns(nx, ny):
-                qp.append((ns+1, nnx, nny))
-
-        if len(qp):
-            aa.append(min([ns for ns, nx, ny in qp]))
-
-    print(min(aa))
-
-
-if __name__ == '__main__':
-    sys.exit(main()) 
+data = open("input14.txt").read().strip()
+rocks = place_rocks(data)
+max_y = max((y for _, y in rocks))
+x, y = (500, 0)
+ct = p1 = p2 = 0
+while True:
+    if (x, y) in rocks:  # restart sand at origin
+        (x, y) = (500, 0)
+    if y > max_y and p1 == 0:  # abyss part 1
+        p1 = ct
+    if (x, y + 1) not in rocks and y < max_y + 1:  # drop down?
+        y += 1
+    elif (x - 1, y + 1) not in rocks and y < max_y + 1:  # drop left-down?
+        x -= 1
+        y += 1
+    elif (x + 1, y + 1) not in rocks and y < max_y + 1:  # drop right-down?
+        x += 1
+        y += 1
+    else:  # hit somoething
+        ct += 1
+        rocks.add((x, y))
+    if (x, y) == (500, 0):  # filled
+        p2 = ct
+        break
+print(f"Part 1: {p1}")
+print(f"Part 2: {p2}")

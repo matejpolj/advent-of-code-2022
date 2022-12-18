@@ -12,18 +12,21 @@ def main():
             j = 0
             while (j < len(inp[i])):
                 k = 0
+                l = 0
                 if f == 0:
                     L[i].append([])
                     f = 1
                 if (inp[i][j].isnumeric()):
                     if ((j < (len(inp[i])-1))):
                         if (inp[i][j+1].isnumeric()):
-                            if (inp[i][j+2].isnumeric()):
-                                tmp = (ord(inp[i][j])-48)*100+(ord(inp[i][j+1])-48)*10+(ord(inp[i][j+2])-48)
-                                L[i][c].append(tmp)
-                                j += 2
-                                k = 1
-                            else:
+                            if ((j < (len(inp[i])-2))):
+                                if (inp[i][j+2].isnumeric()):
+                                    tmp = (ord(inp[i][j])-48)*100+(ord(inp[i][j+1])-48)*10+(ord(inp[i][j+2])-48)
+                                    L[i][c].append(tmp)
+                                    j += 2
+                                    k = 1
+                                    l = 1
+                            if l == 0:
                                 tmp = (ord(inp[i][j])-48)*10+(ord(inp[i][j+1])-48)
                                 L[i][c].append(tmp)
                                 j += 1
@@ -42,10 +45,77 @@ def main():
         for i in range(len(inp)):
             for j in range(len(inp[i])):
                 if (inp[i][j][0] < x):
-                    
-    def createCave(inp):
+                    x = inp[i][j][0]
+                elif (inp[i][j][0] > y):
+                    y = inp[i][j][0]
+                if (inp[i][j][1] < a):
+                    a = inp[i][j][1]
+                elif (inp[i][j][1] > b):
+                    b = inp[i][j][1]
+        return x, y, a, b
+    xmin, xmax, ymin, ymax = findBoundaries(numbers_list)
+    def createCave(inp, x, y, a, b):
         C = []
-    print(numbers_list)
+        for i in range(b+1):
+            C.append([])
+            for j in range(x-1, y):
+                C[i].append('.')
+        for i in range(len(inp)):
+            for j in range(len(inp[i])-1):
+                startx, starty = inp[i][j][0], inp[i][j][1]
+                endx, endy = inp[i][j+1][0], inp[i][j+1][1]
+                if (startx == endx):
+                    ind = startx%x
+                    for k in range(starty, endy+1):
+                        C[k][ind] = '#'
+                elif (starty == endy):
+                    ind = starty
+                    for k in range(min(startx%x, endx%x), max(startx%x, endx%x)+1):
+                        C[ind][k] = '#'
+        return C
+    def fillCaveSystem(inp, x):
+        L = inp.copy()
+        count = 0
+        f = True
+        startx = 500-x
+        while(f and count < 12000):
+            count += 1
+            sx, sy = startx, 0
+            while(1):
+                if (sy == len(L)-1):
+                    f = False
+                    break
+                elif (L[sy+1][sx] == '.'):
+                    sy += 1
+                elif (sx == 0):
+                    f = False
+                    break
+                elif (L[sy+1][sx-1] == '.'):
+                    sx -= 1
+                    sy += 1
+                elif (sx == (len(L[0])-1)):
+                    f = False
+                    break
+                elif(L[sy+1][sx+1] == '.'):
+                    sx += 1
+                    sy += 1
+                else:
+                    L[sy][sx] = 'o'
+                    if (sx < 30 and sy < 35):
+                        for i in range(35):
+                            print(''.join(L[i][:30]), '\n')
+                        print('\n')
+                    break
+        print('\n\n\n')
+        for i in range(len(L)):
+            print(''.join(L[i]), '\n')
+        return count-1
+    cave_system = createCave(numbers_list, xmin, xmax, ymin, ymax)
+    print(numbers_list, cave_system, xmin, xmax, ymin, ymax, '\n\n\n')
+    for i in range(len(cave_system)):
+        print(''.join(cave_system[i]), '\n')
+    count = fillCaveSystem(cave_system, xmin)
+    print(count)
 
 
 if __name__ == '__main__':

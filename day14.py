@@ -73,12 +73,15 @@ def main():
                     for k in range(min(startx%x, endx%x), max(startx%x, endx%x)+1):
                         C[ind][k] = '#'
         return C
+    def checkPlacement(a, b):
+            if ((a > 20 and a < 40) and (b > 20 and b < 40)):
+                print('a')
     def fillCaveSystem(inp, x):
         L = inp.copy()
         count = 0
         f = True
-        startx = 500-x
-        while(f and count < 12000):
+        startx = 500%x
+        while(f):
             count += 1
             sx, sy = startx, 0
             while(1):
@@ -101,17 +104,12 @@ def main():
                     sy += 1
                 else:
                     L[sy][sx] = 'o'
-                    if (sx < 30 and sy < 35):
-                        for i in range(35):
-                            print(''.join(L[i][:30]), '\n')
-                        print('\n')
+                    checkPlacement(sy, sx)
                     break
-        print('\n\n\n')
-        for i in range(len(L)):
-            print(''.join(L[i]), '\n')
+        for i in range(20, 41):
+            print(''.join(L[i][0:31]), '\n')
         return count-1
     cave_system = createCave(numbers_list, xmin, xmax, ymin, ymax)
-    print(numbers_list, cave_system, xmin, xmax, ymin, ymax, '\n\n\n')
     for i in range(len(cave_system)):
         print(''.join(cave_system[i]), '\n')
     count = fillCaveSystem(cave_system, xmin)

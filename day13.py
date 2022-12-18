@@ -124,7 +124,7 @@ def main():
         return two*six
     pack = organizePackets(fitted_list)
     final = findMultipliers(pack)
-    print(sum, pack, final)
+    print(fitted_list, sum, pack, final)
 
 if __name__ == '__main__':
     sys.exit(main())
